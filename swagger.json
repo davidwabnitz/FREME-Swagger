@@ -4,8 +4,8 @@
         "version": "0.2",
         "title": "FREME API Documentation"
     },
-    "host": "api.freme-project.eu",
-    "basePath": "/0.4",
+    "host": "api-dev.freme-project.eu",
+    "basePath": "/current",
     "tags": [
         {
             "name": "e-Entity"
@@ -23,8 +23,11 @@
             "name": "User"
         },
         {
+            "name": "Postprocessing"
+        },
+        {
             "name": "General Information",
-            "description": "This section defines the default parameter set for all FREME e-Services. The parameters have a long and a short form. If both are set, the long form overrides the short form. The API follows the [NIF API specifications](http://persistence.uni-leipzig.org/nlp2rdf/specification/api.html). Please note that all parameter values submitted via the URLs query string need to be URL encoded according to [RFC 3986](https://tools.ietf.org/html/rfc3986).\n\n* input (short form: i):\n    * input of the e-Service in plaintext or nif\n    * no default\n    * depends on informat and intype\n* informat (short form: f):\n    * format of input parameter.\n    * possible values\n      * text (plaintext)\n      * text/turtle (default), short form: turtle\n      * application/json+ld, short form: json-ld\n      * application/n-triples, short form: n-triples\n      * application/rdf+xml, short form: rdf-xml\n      * text/n3, short form: n3\n      * text/html: Submit HTML as input. This will convert the HTML to NIF and then send it to the underlying service.\n      * application/x-xliff+xml: Submit XLIFF 1.2 as input. This will convert the XLIFF to NIF and then send it to the underlying service.\n      * application/x-openoffice\n      * text/xml\n* outformat (short form: o):\n  * output format\n  * possible values\n      * text/turtle (default), short form: turtle\n      * application/json+ld, short form: json-ld\n      * application/n-triples, short form: n-triples\n      * application/rdf+xml, short form: rdf-xml\n      * text/n3, short form: n3\n      * text/html: Submit HTML as input. This will convert the HTML to NIF and then send it to the underlying service.\n* prefix (short form: p)\n  * Controls the url of rdf resources generated from plaintext. Has default value \"http://freme-project.eu/\"\nThe following header values are used by all FREME e-Services\n* Accept\n  * possible values\n    * text/n3\n    * text/turtle\n    * application/ld+json\n    * application/n-triples\n    * application/rdf+xml\n    * text/html\n  * When parameter outformat is set then the Accept header is not used by FREME API.\n* Content-Type\n  * possible values\n    * text (plaintext)\n    * text/n3\n    * text/turtle\n    * application/ld+json\n    * application/n-triples\n    * application/rdf+xml\n    * application/x-xliff+xml\n    * text/html\n    * application/x-openoffice\n    * text/xml\n  * When parameter informat is set then the Content-Type header is not used by FREME api\n"
+            "description": "This section defines the default parameter set for all FREME e-Services. The parameters have a long and a short form. If both are set, the long form overrides the short form. The API follows the [NIF API specifications](http://persistence.uni-leipzig.org/nlp2rdf/specification/api.html). Please note that all parameter values submitted via the URLs query string need to be URL encoded according to [RFC 3986](https://tools.ietf.org/html/rfc3986).\n\n* input (short form: i):\n    * input of the e-Service in plaintext or nif\n    * no default\n    * depends on informat and intype\n* informat (short form: f):\n    * format of input parameter.\n    * possible values\n      * text (plaintext)\n      * text/turtle (default), short form: turtle\n      * application/ld+json, short form: json-ld\n      * application/n-triples, short form: n-triples\n      * application/rdf+xml, short form: rdf-xml\n      * text/n3, short form: n3\n      * text/html: Submit HTML as input. This will convert the HTML to NIF and then send it to the underlying service.\n      * application/x-xliff+xml: Submit XLIFF 1.2 as input. This will convert the XLIFF to NIF and then send it to the underlying service.\n      * application/x-openoffice\n      * text/xml\n* outformat (short form: o):\n  * output format\n  * possible values\n      * text/turtle (default), short form: turtle\n      * application/ld+json, short form: json-ld\n      * application/n-triples, short form: n-triples\n      * application/rdf+xml, short form: rdf-xml\n      * text/n3, short form: n3\n      * text/html: Submit HTML as input. This will convert the HTML to NIF and then send it to the underlying service.\n* prefix (short form: p)\n  * Controls the url of rdf resources generated from plaintext. Has default value \"http://freme-project.eu/\"\nThe following header values are used by all FREME e-Services\n* Accept\n  * possible values\n    * text/n3\n    * text/turtle\n    * application/ld+json\n    * application/n-triples\n    * application/rdf+xml\n    * text/html\n  * When parameter outformat is set then the Accept header is not used by FREME API.\n* Content-Type\n  * possible values\n    * text (plaintext)\n    * text/n3\n    * text/turtle\n    * application/ld+json\n    * application/n-triples\n    * application/rdf+xml\n    * application/x-xliff+xml\n    * text/html\n    * application/x-openoffice\n    * text/xml\n  * When parameter informat is set then the Content-Type header is not used by FREME api\n"
         }
     ],
     "schemes": [
@@ -446,6 +449,18 @@
                         "description": "Input for pipeline chain, can be NIF or plain text",
                         "required": true,
                         "type": "string"
+                    },
+                    {
+                        "name": "stats",
+                        "required": false,
+                        "description": "If true, adds timing statistics to the response: total duration of the pipeline and duration of each service called in the pipeline (in milliseconds).",
+                        "enum": [
+                            "true",
+                            "false"
+                        ],
+                        "default": "false",
+                        "in": "query",
+                        "type": "string"
                     }
                 ],
                 "responses": {
@@ -484,6 +499,18 @@
                         "in": "body",
                         "description": "Body of request in JSON format, see above.",
                         "requird": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "stats",
+                        "required": false,
+                        "description": "If true, adds timing statistics to the response: total duration of the pipeline and duration of each service called in the pipeline (in milliseconds).",
+                        "enum": [
+                            "true",
+                            "false"
+                        ],
+                        "default": "false",
+                        "in": "query",
                         "type": "string"
                     }
                 ],
@@ -810,7 +837,7 @@
                     "e-Entity"
                 ],
                 "summary": "Updating dataset for use in the e-Entity service",
-                "description": "Update a dataset with new data for use in the e-Entity service. See ` POST /e-entity/freme-ner/datasets `\nfor an example SKOS Dataset.\n",
+                "description": "Update a dataset with new data for use in the e-Entity service. The new data will be added to the existing dataset instead of overwriting the existing data. This can be used to upload a large dataset in multiple chunks.\nfor an example SKOS Dataset.\n",
                 "operationId": "updateDataset",
                 "consumes": [
                     "text/n3",
@@ -1047,7 +1074,7 @@
                     {
                         "name": "mode",
                         "in": "query",
-                        "description": "This parameter allows to produce only partly results of named entity recognition. This can speed up computation time. Spotting and classification are relatively fast operations, whereas linking is a computationally expensive operation. When only \"link\" is given as the parameter, this service expects NIF data with entity mentions, i.e. anchorOf, beginIndex, endIndex etc. are given and it does only entity linking. Note that \"all\" is equivalent to \"spot,link,classify\". The order of the modes are irrelevant, i.e. \"spot,link,classify\" is equivalent to \"spot,classify,link\".",
+                        "description": "This parameter allows to produce only partly results of named entity recognition. This can speed up computation time. Spotting and classification are relatively fast operations, whereas linking is a computationally expensive operation. When \"link\" is given as the parameter and the given \"informat\" or \"Content-Type\" is NIF, this service expects NIF data with entity mentions, i.e. anchorOf, beginIndex, endIndex etc. are given and it does only entity linking. When \"link\" is given as the parameter and the given \"informat\" or \"Content-Type\" is plain text, this service interprets the entire input as a single Entity and does entity linking for that specific entity. Note that \"all\" is equivalent to \"spot,link,classify\". The order of the modes are irrelevant, i.e. \"spot,link,classify\" is equivalent to \"spot,classify,link\".",
                         "required": false,
                         "type": "string",
                         "default": "all",
@@ -1059,7 +1086,325 @@
                             "all",
                             "link"
                         ]
+                    },
+                    {
+                        "name": "domain",
+                        "in": "query",
+                        "description": "Takes as input a domain ID, and it only returns entities from this domain. The domain IDs are from the [TaaS domain classification system](https://term.tilde.com/domains). For example, the sports domain is identified with the TaaS-2007 ID. Note that the IDs are case-sensitive. More information about the domain parameter in [FREME NER documentation](../knowledge-base/freme-ner.html).",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "types",
+                        "in": "query",
+                        "description": "Takes as input list of one or more entity types separated by a comma. The types are URLs of ontology classes and they should be encoded. The result is a list of extracted entities with these types. More information about the types parameter in [FREME NER documentation](../knowledge-base/freme-ner.html).",
+                        "required": false,
+                        "type": "string"
                     }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request - input validation failed"
+                    }
+                }
+            }
+        },
+        "/toolbox/filter/manage/{name}": {
+            "post": {
+                "tags": [
+                    "Postprocessing"
+                ],
+                "summary": "Create a postprocessing filter",
+                "description": "Creates a new filter. The filter will be constructed from the body content, which has to be a valid SPARQL SELECTquery as plain text. See the [Simplify FREME output using SPARQL filters](../knowledge-base/filtering.html) article for further information. Ensure, that a filter with the name `filter-name` does not already exist. Requires [authentication](../knowledge-base/authentication.html).\n",
+                "produces": [
+                    "application/json"
+                ],
+                "consumes": [
+                    "text/plain"
+                ],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "type": "string",
+                        "description": "A valid SPARQL SELECT query as plain text."
+                    },
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "required": true,
+                        "description": "Name of filter. Must be unique.",
+                        "type": "string"
+                    },
+                    {
+                        "name": "visibility",
+                        "in": "query",
+                        "required": false,
+                        "enum": [
+                            "public",
+                            "private"
+                        ],
+                        "default": "public",
+                        "type": "string",
+                        "description": "Sets the visibility of this restricted resource, see [authentication article] (../knowledge-base/authentication.html)."
+                    },
+                    {
+                        "name": "description",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "description": "Sets a description for this filter."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request - input validation failed"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Postprocessing"
+                ],
+                "summary": "Update an existing postprocessing filter",
+                "description": "Updates the filter with the name `filter-name`. Requires [authentication](../knowledge-base/authentication.html). Only fields containing content are updated. So, if you just want to transfer the ownership or change the visibility without updating the SPARQL filter query, leave the body empty.\n",
+                "produces": [
+                    "application/json"
+                ],
+                "consumes": [
+                    "text/plain"
+                ],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": false,
+                        "type": "string",
+                        "description": "A valid SPARQL SELECT query as plain text."
+                    },
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "required": true,
+                        "description": "Name of filter to be updated.",
+                        "type": "string"
+                    },
+                    {
+                        "name": "visibility",
+                        "in": "query",
+                        "required": false,
+                        "enum": [
+                            "public",
+                            "private"
+                        ],
+                        "default": "public",
+                        "type": "string",
+                        "description": "Sets the visibility of this restricted resource, see [authentication article] (../knowledge-base/authentication.html)."
+                    },
+                    {
+                        "name": "description",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "description": "Updates the description for this filter."
+                    },
+                    {
+                        "name": "newOwner",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "description": "Transfers ownership to another user. Must be username of an existing user."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request - input validation failed"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Postprocessing"
+                ],
+                "summary": "Delete a postprocessing filter",
+                "description": "Deletes the filter with specified name. Requires [authentication](../knowledge-base/authentication.html). If you just want to transfer the ownership or change the visibility without updating the SPARQL filter query, send `EMPTY`, `NULL` or ` ` (a string containing only whitespace) as body.\n",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "required": true,
+                        "description": "Name of filter to be updated.",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request - input validation failed"
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "Postprocessing"
+                ],
+                "summary": "Get a postprocessing filter",
+                "description": "Returns one specific filter with specified name.\n",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "required": true,
+                        "description": "Name of filter to be returned",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request - input validation failed"
+                    }
+                }
+            }
+        },
+        "/toolbox/filter/documents/{name}": {
+            "post": {
+                "tags": [
+                    "Postprocessing"
+                ],
+                "summary": "Execute a filter against an RDF graph",
+                "description": "This endpoint allows to execute a certain filter against a RDF graph sent as post body or as value of the NIF `input` parameter. For more information and a list of available filters, see the [Simply FREME output using SPARQL filters](knowledge-base/filtering.html) article.\n",
+                "consumes": [
+                    "text/n3",
+                    "text/turtle",
+                    "application/ld+json",
+                    "application/n-triples",
+                    "application/rdf+xml"
+                ],
+                "produces": [
+                    "text/comma-separated-values",
+                    "application/json",
+                    "text/xml",
+                    "text/n3",
+                    "text/turtle",
+                    "application/ld+json",
+                    "application/n-triples",
+                    "application/rdf+xml",
+                    "text/xml"
+                ],
+                "parameters": [
+                    {
+                        "name": "input",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "description": "The RDF graph which will be queried, in the specific RDF format. Overridden request body"
+                    },
+                    {
+                        "name": "informat",
+                        "in": "query",
+                        "description": "Format of input string. Overrides Content-Type Header. Short form is i",
+                        "enum": [
+                            "json-ld",
+                            "turtle",
+                            "n3",
+                            "n-triples",
+                            "rdf-xml"
+                        ],
+                        "default": "turtle",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "outformat",
+                        "in": "query",
+                        "description": "RDF serialization format of Output. Overrides Accept Header (Response Content Type). Short form is o.",
+                        "required": false,
+                        "type": "string",
+                        "default": "csv",
+                        "enum": [
+                            "csv",
+                            "xml",
+                            "json",
+                            "json-ld",
+                            "turtle",
+                            "n3",
+                            "n-triples",
+                            "rdf-xml"
+                        ]
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": false,
+                        "type": "string",
+                        "description": "The RDF graph which will be queried, in the specific RDF format. Overridden by input parameter"
+                    },
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "required": true,
+                        "description": "Name of filter to execute against",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request - input validation failed"
+                    }
+                }
+            }
+        },
+        "/toolbox/filter/manage": {
+            "get": {
+                "tags": [
+                    "Postprocessing"
+                ],
+                "summary": "Get all postprocessing filters",
+                "description": "Returns all read accessible filters, see [authentication article](../knowledge-base/authentication.html) for further information.\n",
+                "produces": [
+                    "application/json"
                 ],
                 "responses": {
                     "200": {
@@ -1143,22 +1488,14 @@
                     "text/turtle",
                     "application/ld+json",
                     "application/n-triples",
-                    "application/rdf+xml",
-                    "application/x-xliff+xml",
-                    "text/html",
-                    "application/x-openoffice",
-                    "text/xml"
+                    "application/rdf+xml"
                 ],
                 "produces": [
                     "text/n3",
                     "text/turtle",
                     "application/ld+json",
                     "application/n-triples",
-                    "application/rdf+xml",
-                    "application/x-xliff+xml",
-                    "text/html",
-                    "application/x-openoffice",
-                    "text/xml"
+                    "application/rdf+xml"
                 ],
                 "parameters": [
                     {
@@ -1173,11 +1510,7 @@
                             "turtle",
                             "n3",
                             "n-triples",
-                            "rdf-xml",
-                            "text/html",
-                            "text/xml",
-                            "application/x-xliff+xml",
-                            "application/x-openoffice"
+                            "rdf-xml"
                         ],
                         "default": "turtle"
                     },
@@ -1193,11 +1526,7 @@
                             "turtle",
                             "n3",
                             "n-triples",
-                            "rdf-xml",
-                            "text/html",
-                            "text/xml",
-                            "application/x-xliff+xml",
-                            "application/x-openoffice"
+                            "rdf-xml"
                         ],
                         "default": "turtle"
                     },
@@ -1273,7 +1602,7 @@
                     "e-Link"
                 ],
                 "summary": "Creates a new enrichment template.",
-                "description": "Creates a new enrichment template. The template will be constructed from JSON data submitted as body.\n\n**The JSON input has to contain the following fields:**\n- `query:` a SPARQL CONSTRUCT query\n- `endpoint:` the SPARQL endpoint which will be used to execute the template\n- `label:` the title of the template\n- `description:` a description of the template\n\n**Optional fields:**\n- `endpointType`: This parameter describes the type of the endpoint data. The value has to be either \"sparql\" (default) or \"ldf\".\n- `visibility`: visibility: This parameter controlls, how the template can be accessed by other users than the owner. This includes enrichment etc. via this template. See the Restricted Endpoints and Restricted Resources section of the <a href= \"./../knowledge-base/authentication.html\" target=\"_blank\">authentication article</a> for further information. The value has to be either \"public\" (default) or \"private\".\n\n**Example of input in JSON format:**\n\n<pre lang=\"javascript\"><code>\n{\n    &quot;query&quot;: &quot;PREFIX dbpedia: &lt;http://dbpedia.org/resource/&gt;\\n      PREFIX dbpedia-owl: &lt;http://dbpedia.org/ontology/&gt;\\n      PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;\\n      PREFIX geo: &lt;http://www.w3.org/2003/01/geo/wgs84_pos#&gt;\\n      CONSTRUCT\\n      {\\n        ?museum &lt;http://xmlns.com/foaf/0.1/based_near&gt; &lt;@@@entity_uri@@@&gt; .\\n      }\\n      WHERE\\n      {\\n          &lt;@@@entity_uri@@@&gt; geo:geometry ?citygeo .\\n          ?museum rdf:type &lt;http://schema.org/Museum&gt; .\\n          ?museum geo:geometry ?museumgeo .\\n          FILTER (&lt;bif:st_intersects&gt;(?museumgeo, ?citygeo, 10))\\n      }\\n      LIMIT 10&quot;,\n    &quot;endpoint&quot;: &quot;http://dbpedia.org/sparql/&quot;,\n    &quot;label&quot;: &quot;template title&quot;,\n    &quot;description&quot;: &quot;template description&quot;,\n    &quot;endpointType&quot;: &quot;sparql&quot;,\n    &quot;visibility&quot;: &quot;public&quot;\n}\n</code></pre>\n\nHere is a simple SPARQL COSTRUCT QUERY. Please note that you have to convert newline characters to \\n before copy & pasting it in JSON:\n\n<pre lang=\"sparql\"><code>\nPREFIX dbpedia: &lt;http://dbpedia.org/resource/&gt;\nPREFIX dbpedia-owl: &lt;http://dbpedia.org/ontology/&gt;\nPREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;\nPREFIX geo: &lt;http://www.w3.org/2003/01/geo/wgs84_pos#&gt;\nCONSTRUCT\n{\n  ?museum &lt;http://xmlns.com/foaf/0.1/based_near&gt; &lt;@@@entity_uri@@@&gt; .\n}\nWHERE\n{\n    &lt;@@@entity_uri@@@&gt; geo:geometry ?citygeo .\n    ?museum rdf:type &lt;http://schema.org/Museum&gt; .\n    ?museum geo:geometry ?museumgeo .\n    FILTER (&lt;bif:st_intersects&gt;(?museumgeo, ?citygeo, 10))\n}\nLIMIT 10\n</code></pre>\n\nIn fact, each template should have the field `@@@entity_uri@@@` which identifies an entity. When performing enrichment, the template is executed for each entity (identified with taIdentRef) in the document. It means, each `@@@entity_uri@@@` is replaced with the taIdentRef link from the submitted document for enrichment. So `@@@entity_uri@@@` us a reserved field name.\n\nHowever you can always introduce your fields e.g. `... } LIMIT @@@my_limit@@@` and then use this fields by submitting `my_limit` parameter in the request. Example (see `my_limit` parameter):\n\n<pre lang=\"bash\"><code>curl -v -d @example.ttl -X POST -H \"Content-Type: text/turtle\" \"http://localhost:8080/e-link/documents?templateid=116&my_limit=5\"\n</code></pre>\n",
+                "description": "Creates a new enrichment template. The template will be constructed from JSON data submitted as body.\n\n**The JSON input has to contain the following fields:**\n- `query:` a SPARQL CONSTRUCT query. Only SPARQL CONSTRUCT queries are supported by e-Link\n- `endpoint:` the SPARQL endpoint which will be used to execute the template\n- `label:` the title of the template\n- `description:` a description of the template\n\n**Optional fields:**\n- `endpointType`: This parameter describes the type of the endpoint data. The value has to be either \"sparql\" (default) or \"ldf\".\n- `visibility`: visibility: This parameter controlls, how the template can be accessed by other users than the owner. This includes enrichment etc. via this template. See the Restricted Endpoints and Restricted Resources section of the <a href= \"./../knowledge-base/authentication.html\" target=\"_blank\">authentication article</a> for further information. The value has to be either \"public\" (default) or \"private\".\n\n**Example of input in JSON format:**\n\n<pre lang=\"javascript\"><code>\n{\n    &quot;query&quot;: &quot;PREFIX dbpedia: &lt;http://dbpedia.org/resource/&gt;\\n      PREFIX dbpedia-owl: &lt;http://dbpedia.org/ontology/&gt;\\n      PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;\\n      PREFIX geo: &lt;http://www.w3.org/2003/01/geo/wgs84_pos#&gt;\\n      CONSTRUCT\\n      {\\n        ?museum &lt;http://xmlns.com/foaf/0.1/based_near&gt; &lt;@@@entity_uri@@@&gt; .\\n      }\\n      WHERE\\n      {\\n          &lt;@@@entity_uri@@@&gt; geo:geometry ?citygeo .\\n          ?museum rdf:type &lt;http://schema.org/Museum&gt; .\\n          ?museum geo:geometry ?museumgeo .\\n          FILTER (&lt;bif:st_intersects&gt;(?museumgeo, ?citygeo, 10))\\n      }\\n      LIMIT 10&quot;,\n    &quot;endpoint&quot;: &quot;http://dbpedia.org/sparql/&quot;,\n    &quot;label&quot;: &quot;template title&quot;,\n    &quot;description&quot;: &quot;template description&quot;,\n    &quot;endpointType&quot;: &quot;sparql&quot;,\n    &quot;visibility&quot;: &quot;public&quot;\n}\n</code></pre>\n\nHere is a simple SPARQL COSTRUCT QUERY. Please note that you have to convert newline characters to \\n before copy & pasting it in JSON:\n\n<pre lang=\"sparql\"><code>\nPREFIX dbpedia: &lt;http://dbpedia.org/resource/&gt;\nPREFIX dbpedia-owl: &lt;http://dbpedia.org/ontology/&gt;\nPREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;\nPREFIX geo: &lt;http://www.w3.org/2003/01/geo/wgs84_pos#&gt;\nCONSTRUCT\n{\n  ?museum &lt;http://xmlns.com/foaf/0.1/based_near&gt; &lt;@@@entity_uri@@@&gt; .\n}\nWHERE\n{\n    &lt;@@@entity_uri@@@&gt; geo:geometry ?citygeo .\n    ?museum rdf:type &lt;http://schema.org/Museum&gt; .\n    ?museum geo:geometry ?museumgeo .\n    FILTER (&lt;bif:st_intersects&gt;(?museumgeo, ?citygeo, 10))\n}\nLIMIT 10\n</code></pre>\n\nIn fact, each template should have the field `@@@entity_uri@@@` which identifies an entity. When performing enrichment, the template is executed for each entity (identified with taIdentRef) in the document. It means, each `@@@entity_uri@@@` is replaced with the taIdentRef link from the submitted document for enrichment. So `@@@entity_uri@@@` us a reserved field name.\n\nHowever you can always introduce your fields e.g. `... } LIMIT @@@my_limit@@@` and then use this fields by submitting `my_limit` parameter in the request. Example (see `my_limit` parameter):\n\n<pre lang=\"bash\"><code>curl -v -d @example.ttl -X POST -H \"Content-Type: text/turtle\" \"http://localhost:8080/e-link/documents?templateid=116&my_limit=5\"\n</code></pre>\n",
                 "operationId": "createTemplate",
                 "consumes": [
                     "application/json"
@@ -1690,7 +2019,7 @@
                     "e-Translation"
                 ],
                 "summary": "Perform machine translation using Tilde's API",
-                "description": "Parameters can be submitted via URL or via form-data post body. A list of available\nlanguage pairs is [here](https://services.tilde.com/translationsystems). This is a\nNIF example that can be consumed by e-Translation:\n\n<pre lang=\"sparql\"><code>\n@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema# &gt; .\n@prefix nif: &lt;http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core# &gt; .\n@prefix itsrdf: &lt;http://www.w3.org/2005/11/its/rdf# &gt; .\n@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema# &gt; .\n@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns# &gt; .\n&lt;http://freme-project.eu/ &gt;\n  a nif:String , nif:RFC5147String , nif:Context ;\n    nif:beginIndex  &quot;0&quot;^^xsd:nonNegativeInteger ;\n    nif:endIndex    &quot;11&quot;^^xsd:nonNegativeInteger ;\n    nif:isString    &quot;translate me&quot;@en ;\n</code></pre>\n",
+                "description": "Parameters can be submitted via URL or via form-data post body. A list of available\nlanguage pairs is [here](https://services.tilde.com/translationsystems). This is a\nNIF example that can be consumed by e-Translation:\n\n<pre lang=\"sparql\"><code>\n@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .\n@prefix nif: &lt;http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#&gt; .\n@prefix itsrdf: &lt;http://www.w3.org/2005/11/its/rdf#&gt; .\n@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .\n@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .\n&lt;http://freme-project.eu/&gt;\n  a nif:String , nif:RFC5147String , nif:Context ;\n    nif:beginIndex  &quot;0&quot;^^xsd:nonNegativeInteger ;\n    nif:endIndex    &quot;11&quot;^^xsd:nonNegativeInteger ;\n    nif:isString    &quot;translate me&quot;@en .\n</code></pre>\n",
                 "operationId": "tildeTranslate",
                 "consumes": [
                     "text/n3",
@@ -1699,7 +2028,6 @@
                     "application/ld+json",
                     "application/n-triples",
                     "text/plain",
-                    "application/x-xliff+xml",
                     "text/html",
                     "application/x-openoffice",
                     "text/xml"
@@ -1751,7 +2079,6 @@
                         "required": false,
                         "type": "string",
                         "enum": [
-                            "text",
                             "json-ld",
                             "turtle",
                             "n3",
@@ -1804,7 +2131,7 @@
                     {
                         "name": "domain",
                         "in": "query",
-                        "description": "specify domain of translation system. List of supported domains and language pairs can be found [here](https://services.tilde.com/translationsystem).",
+                        "description": "specify domain of translation system. List of supported domains and language pairs can be found [here](https://services.tilde.com/translationsystems).",
                         "required": false,
                         "type": "string"
                     },
